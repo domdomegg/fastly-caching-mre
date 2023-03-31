@@ -1,19 +1,27 @@
-# See https://developer.fastly.com/reference/fastly-toml/
+# This file describes a Fastly Compute@Edge package. To learn more visit:
+# https://developer.fastly.com/reference/fastly-toml/
 
+authors = []
+description = ""
 language = "Typescript"
 manifest_version = 2
 name = "fastly-caching-repro"
-
-[setup.backends.example]
-address = "https://webhook.site/"
-port = 443
+service_id = "5sdsCrcYoSMoWPaqi99No0"
 
 [local_server]
 
-[local_server.backends]
+  [local_server.backends]
 
-[local_server.backends.example]
-url = "https://webhook.site/"
+    [local_server.backends.example]
+      url = "https://webhook.site"
 
 [scripts]
-build = "npm run build"
+  build = "npm run build"
+
+[setup]
+
+  [setup.backends]
+
+    [setup.backends.example]
+      address = "webhook.site"
+      port = 443
