@@ -1,7 +1,7 @@
 /// <reference types="@fastly/js-compute" />
 
-//! Default Compute@Edge template program.
-import welcomePage from "./welcome-to-compute@edge.html";
+import { CacheOverride } from "fastly:cache-override";
+import indexPage from "./index.html";
 
 // The entry point for your application.
 //
@@ -12,59 +12,19 @@ import welcomePage from "./welcome-to-compute@edge.html";
 
 addEventListener("fetch", (event) => event.respondWith(handleRequest(event)));
 
-async function handleRequest(event: FetchEvent) {
-  // Get the client request.
-  let req = event.request;
-
-  // Filter requests that have unexpected methods.
-  if (!["HEAD", "GET", "PURGE"].includes(req.method)) {
-    return new Response("This method is not allowed", {
-      status: 405,
-    });
-  }
-
-  let url = new URL(req.url);
-
-  // If request is to the `/` path...
-  if (url.pathname == "/") {
-    // Below are some common patterns for Compute@Edge services using JavaScript.
-    // Head to https://developer.fastly.com/learning/compute/javascript/ to discover more.
-
-    // Create a new request.
-    // let bereq = new Request("http://example.com");
-
-    // Add request headers.
-    // req.headers.set("X-Custom-Header", "Welcome to Compute@Edge!");
-    // req.headers.set(
-    //   "X-Another-Custom-Header",
-    //   "Recommended reading: https://developer.fastly.com/learning/compute"
-    // );
-
-    // Create a cache override.
-    // let cacheOverride = new CacheOverride("override", { ttl: 60 });
-
-    // Forward the request to a backend.
-    // let beresp = await fetch(req, {
-    //   backend: "backend_name",
-    //   cacheOverride,
-    // });
-
-    // Remove response headers.
-    // beresp.headers.delete("X-Another-Custom-Header");
-
-    // Log to a Fastly endpoint.
-    // const logger = fastly.getLogger("my_endpoint");
-    // logger.log("Hello from the edge!");
-
-    // Send a default synthetic response.
-    return new Response(welcomePage, {
+async function handleRequest(event: FetchEvent): Promise<Response> {
+  const reqUrl = new URL(event.request.url)
+  if (reqUrl.pathname === "/") {
+    return new Response(indexPage, {
       status: 200,
       headers: new Headers({ "Content-Type": "text/html; charset=utf-8" }),
     });
   }
 
-  // Catch all other requests and return a 404.
-  return new Response("The page you requested could not be found", {
-    status: 404,
+  const response = await fetch('/41df2cc2-5496-49b1-a843-3f4d03b59014', {
+    method: 'GET',
+    backend: `example`,
+    cacheOverride: new CacheOverride("override", { ttl: 31557600 /* 1 year */ })
   });
+  return new Response(JSON.stringify({ backendId: response.headers.get('x-request-id') }));
 }

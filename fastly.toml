@@ -1,11 +1,19 @@
-# This file describes a Fastly Compute@Edge package. To learn more visit:
-# https://developer.fastly.com/reference/fastly-toml/
+# See https://developer.fastly.com/reference/fastly-toml/
 
-authors = ["<oss@fastly.com>"]
-description = "A basic starter kit that demonstrates routing, simple synthetic responses and overriding caching rules."
 language = "Typescript"
 manifest_version = 2
-name = "Default starter for Typescript"
+name = "fastly-caching-repro"
+
+[setup.backends.example]
+address = "https://webhook.site/"
+port = 443
+
+[local_server]
+
+[local_server.backends]
+
+[local_server.backends.example]
+url = "https://webhook.site/"
 
 [scripts]
-  build = "npm run build"
+build = "npm run build"

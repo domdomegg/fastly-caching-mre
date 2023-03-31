@@ -9,7 +9,7 @@ module.exports = {
   target: "webworker",
   output: {
     filename: "index.js",
-    path: path.resolve(__dirname, "bin"),
+    path: path.resolve(__dirname, "dist"),
     libraryTarget: "this",
   },
   module: {
@@ -39,5 +39,16 @@ module.exports = {
     new webpack.ProvidePlugin({
       URL: "core-js/web/url",
     }),
+  ],
+  externals: [
+    ({ request }, callback) => {
+      // By default, imports with a colon are treated as URLs. We need to override
+      // that behavior for fastly, pointing the import at the correct place.
+      if (/^fastly:.*$/.test(request)) {
+        callback(null, `commonjs ${request}`);
+        return;
+      }
+      callback();
+    },
   ],
 };
