@@ -13,6 +13,9 @@
       const res = await fetch('/request', { method: 'POST' })
       const data = await res.json();
       callsToFastly++;
+      if (data.backendId === null) {
+        alert('Missing backendId in response. This likely indicates the request bin has expired, so this demo may be broken. To fix this, update the request bin URL to a working one in index.ts and index.html.')
+      }
       if (!seen.has(data.backendId)) {
         seen.add(data.backendId);
         callsToBackend++;
@@ -27,7 +30,7 @@
   <div>Calls to fastly: <span id="calls-to-fastly">0</span></div>
   <div>Calls to backend: <span id="calls-to-backend">0</span></div>
   <div>
-    <a href="https://webhook.site/#!/41df2cc2-5496-49b1-a843-3f4d03b59014">View request bin</a>
+    <a href="https://webhook.site/#!/f81728fa-f120-4f14-8a50-759ef1c073d7">View request bin</a>
   </div>
 </body>
 </html>

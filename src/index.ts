@@ -21,7 +21,7 @@ async function handleRequest(event: FetchEvent): Promise<Response> {
     });
   }
 
-  const response = await fetch('/41df2cc2-5496-49b1-a843-3f4d03b59014', {
+  const response = await fetch('/f81728fa-f120-4f14-8a50-759ef1c073d7', {
     method: 'GET',
     backend: `example`,
     cacheOverride: new CacheOverride("override", { ttl: 31557600 /* 1 year */ })
